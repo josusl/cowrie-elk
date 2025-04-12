@@ -15,7 +15,7 @@ Además, se ha implementado un pipeline para geolocalizar las direcciones IP de 
 Las instrucciones de despliegue se han simplificado para una configuración rápida:
 
 1.  Clona este repositorio en tu equipo local:  
-    `git clone https://github.com/josusl/cowrie-elk/tree/main`
+    `git clone https://github.com/josusl/cowrie-elk`
 2.  Levanta la pila de contenedores con Docker Compose:  
     `docker-compose up -d`
 3.  Accede a Kibana a través de tu navegador:  
