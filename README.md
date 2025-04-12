@@ -1,143 +1,25 @@
-# cowrie-elastic-stack
-Build honeypot with Cowrie, and Analyze the logs with Elastic Stack
+# cowrie-elk
 
-## Configuration
-* Docker Compose
-* Cowrie SSH/Telnet honeypot
-* Elastic Stack
-  * Elasticsearch
-  * Kibana
-  * Filebeat
-  * Logstash
+Este proyecto implementa un honeypot utilizando Cowrie para la captura de interacciones maliciosas SSH y Telnet, y utiliza el Elastic Stack para el análisis y visualización de los registros.  
 
-## System requirements
-* 2GB RAM
-* 20GB free Space
+Para obtener información detallada sobre Cowrie, consulta la [documentación oficial de Cowrie](https://github.com/cowrie/cowrie)
 
-## How to build the environment
-1. Update the package to the latest version
+Este repositorio es un fork adaptado para funcionar con las nuevas versiones del Elastic Stack.  
 
-```bash
-sudo apt update && sudo apt upgrade -y
-```
+Además, se ha implementado un pipeline para geolocalizar las direcciones IP de los ataques y visualizarlas en un mapa, mejorando la capacidad de análisis de la procedencia de las amenazas.
 
-2. Change the port number when logging in via SSH
+**Importante:** Antes de la instalación, asegúrate de tener instalado en tu sistema (Debian/Ubuntu) Docker, Docker Compose y Git.
 
-```bash
-sudo vim /etc/ssh/sshd_config
-```
+## Despliegue rápido
 
-Find the line where `#Port 22` is written, and rewrite it as `Port 22222`
+Las instrucciones de despliegue se han simplificado para una configuración rápida:
 
-Reload ssh.service to reflect the change
-
-```bash
-sudo systemctl reload ssh
-```
-
-3. Install Git
-
-```bash
-sudo apt install -y git
-```
-
-4. Install Docker Compose
-
-Please see here: [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-
-5. Clone this repository, and change to the directory
-
-```bash
-git clone https://github.com/nagutabby/cowrie-elastic-stack.git
-cd cowrie-elastic-stack
-```
-
-6. Create a directory and files
-
-You will need to create the following directory and files:
-
-* directory
-  * cowrie/log/
-* files
-  * cowrie/log/cowrie.json
-  * cowrie/config/cowrie.cfg
-  * cowrie/config/userdb.txt
-
-
-```bash
-mkdir cowrie/log/
-touch cowrie/log/cowrie.json
-sudo chmod o+w cowrie/log/cowrie.json
-touch cowrie/config/cowrie.cfg
-touch cowrie/config/userdb.txt
-```
-
-Here is an example of the contents of the file:
-
-* cowrie.cfg
-
-```config
-[telnet]
-enabled = True
-# listen 23/tcp and 2323/tcp
-listen_endpoints = tcp:23:interface=0.0.0.0 tcp:2323:interface=0.0.0.0
-
-[ssh]
-# listen 22/tcp and 2222/tcp
-listen_endpoints = tcp:22:interface=0.0.0.0 tcp:2222:interface=0.0.0.0
-
-[output_virustotal]
-enabled = True
-api_key = [Your API key]
-upload = True
-scan_file = True
-scan_url = True
-```
-
-* userdb.txt
-
-```txt
-# Example userdb.txt 
-# This file may be copied to etc/userdb.txt.
-# If etc/userdb.txt is not present, built-in defaults will be used.
-#
-# ':' separated fields, file is processed line for line
-# processing will stop on first match
-# 
-# Field #1 contains the username
-# Field #2 is currently unused
-# Field #3 contains the password 
-# '*' for any username or password
-# '!' at the start of a password will not grant this password access
-# '/' can be used to write a regular expression 
-#
-root:x:*
-ubuntu:x:*
-pi:x:*
-admin:x:*
-www:x:*
-```
-
-7. Build and run containers
-
-```bash
-docker compose up
-```
-
-You can run the containers as a daemon with the following command:
-
-```bash
-docker compose up -d
-```
-
-8. Access Kibana in your browser
-
-You can access Kibana by typing `http://[IP address]:5601` in your browser.
-
-## Tip
-
-You can check whether Elasticsearch works properly with the following command:
-
-```bash
-curl http://[IP address]:9200
-```
+1.  Clona este repositorio en tu equipo local:  
+    `git clone https://github.com/josusl/cowrie-elk/tree/main`
+2.  Levanta la pila de contenedores con Docker Compose:  
+    `docker-compose up -d`
+3.  Accede a Kibana a través de tu navegador:  
+    `http://tu-direccion-ip:5601`
+4.  Implementa manualmente el código de geolocalización.  
+    Copia el contenido del archivo "copiar\_geolocalizacion.json" y pégalo en la consola "Dev Tools" de Kibana.
+5.  Finalmente, indexa el índice en Kibana para poder visualizar los datos.

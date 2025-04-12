@@ -1,3 +1,4 @@
 cowrie.cfg
 userdb.txt
-cowrie.json
+cowrie.json*
+cowrie/log/*

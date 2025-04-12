@@ -1,10 +1,8 @@
-version: "3"
+version: "3.3"
 services:
   cowrie:
     image: cowrie/cowrie
     ports:
-      - "22:22"
-      - "23:23"
       - "2222:2222"
       - "2323:2323"
     volumes:
@@ -22,7 +20,7 @@ services:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - elasticsearch:/usr/share/elasticsearch/data
     networks:
-      - elastic
+      - elk
   kibana:
     build: ./kibana
     environment:
@@ -34,7 +32,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elastic
+      - elk
   logstash:
     build: ./logstash
     ports:
@@ -47,19 +45,22 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elastic
-  filebeat:
+      - elk
+  filebeat:      
     build: ./filebeat
+    command:
+      - "-e"
+      - "--strict.perms=false"      
     volumes:
       - ./cowrie/log/cowrie.json:/var/log/cowrie/cowrie.json
       - ./filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
     depends_on:
-      - elasticsearch
+      - logstash  
     networks:
-      - elastic
+      - elk
 
 volumes:
   elasticsearch:
 
 networks:
-  elastic:
+  elk:

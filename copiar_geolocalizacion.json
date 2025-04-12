@@ -1,0 +1,16 @@
+PUT _ingest/pipeline/copiar_geolocalizacion
+{
+  "description": "Copiar lat/lon a ubicacion como geo_point",
+  "processors": [
+    {
+      "script": {
+        "lang": "painless",
+        "source": """
+          if (ctx.geoip?.geo?.location?.lat != null && ctx.geoip?.geo?.location?.lon != null) {
+            ctx.ubicacion = [ctx.geoip.geo.location.lon, ctx.geoip.geo.location.lat];
+          }
+        """
+      }
+    }
+  ]
+}
