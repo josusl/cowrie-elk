@@ -18,8 +18,6 @@ Además, se ha implementado un pipeline para geolocalizar las direcciones IP de 
     `git clone https://github.com/josusl/cowrie-elk`
 2.  Levanta la pila de contenedores con Docker Compose:  
     `docker-compose up -d`
-2.  Crea un nuevo fichero para guardar los logs:  
-    `touch cowrie.json`
 3.  Cambia los permisos a este fichero:
 4.  `sudo chmod o+w cowrie/log/cowrie.json`
 5.  Accede a Kibana a través de tu navegador:  
